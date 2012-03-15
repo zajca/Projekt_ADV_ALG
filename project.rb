@@ -52,10 +52,14 @@ def testInput inputArray
   nOfSetNumbers = inputArray[1][0]
   puts "Number of given numbers: " + nOfSetNumbers
   
+  testMaxValueEach(inputArray,1)
+  
   lineOfNumberConstraints = (2 + nOfSetNumbers.to_i)
   
   testPositionOfAdditionalConstraints(inputArray, lineOfNumberConstraints)
 
+  testMaxValueEach(inputArray, lineOfNumberConstraints)
+  
   numberOfAdditionalConstraints = inputArray[lineOfNumberConstraints][0]
   
   puts "Number of given constraints: " + numberOfAdditionalConstraints
@@ -79,6 +83,36 @@ end
 ##
 ##Testes called by testInput
 ##
+
+def testMaxValueEach(inputArray, line)
+    dim = inputArray[0][0].to_i
+    nOfSetNumbers = inputArray[line][0].to_i
+    start=line+1
+    ending=nOfSetNumbers+line
+    testMaxValueEachCicle(inputArray, line, start, ending, dim)
+end
+
+def testMaxValueEachCicle(inputArray, line, start, ending, dim)
+  (start..ending).each do |i|
+      colNum = inputArray[i][1].to_i
+      rowNum = inputArray[i][0].to_i
+      if(line==1)
+        intVal = inputArray[i][2].to_i
+      else
+        intVal = 1
+      end
+      testMaxValueEachCall(dim, colNum, rowNum, i+2, intVal)
+    end
+end
+    
+def testMaxValueEachCall(dim, colNum, rowNum, line, intVal)
+  line=line-1
+  if(colNum>dim or rowNum>dim or intVal>dim or colNum<1 or rowNum<1 or intVal<1)
+    puts "Value of some element is bigger than maximum number Line: #{line}"
+    Kernel.exit
+  end
+end
+
 def testPositionOfAdditionalConstraints(inputArray, lineNumber)
   if inputArray[lineNumber].length != 1
     puts "input file error, Line N.#{lineNumber+1}"
@@ -286,7 +320,6 @@ end
 end
 
 def createDefinedNumbers(inputArray, varMatrix) #return constraints for predefined numbers
-  #dim = inputArray[0][0].to_i
     nOfSetNumbers = inputArray[1][0].to_i
     outStringArr = []
 
@@ -294,7 +327,6 @@ def createDefinedNumbers(inputArray, varMatrix) #return constraints for predefin
       colNum = inputArray[i][1].to_i
       rowNum = inputArray[i][0].to_i
       intVal = inputArray[i][2].to_i
-      #puts "col:#{colNum} row:#{rowNum} inVal#{intVal}"
       x = varMatrix[rowNum-1][colNum-1]
       outStringArr[i-2] = "#{x} = #{intVal};"
     end
@@ -470,12 +502,14 @@ def parseOutFromLP_solve(inputArray, dim)
   return outStringArr
 end
 
-def printResult resultArr
+def printResult(resultArr, dim)
   outputFileName = 'FinalResult.txt'
   outFile = File.new(outputFileName, 'w')
   
   arrL = resultArr.length
   resString = String.new
+  puts dim
+  outFile.puts dim
   for line in 0..arrL
     resString = resultArr[line].to_s.gsub(/[\[\]\,\"]/, '')
     puts resString
@@ -496,7 +530,7 @@ system("lp_solve outputForLpSolve.lp>outFromLpSolve.txt")
 arrayOfLines = readFile 'outFromLpSolve.txt'
 normarmalizedArray = normalizeFinalFile arrayOfLines
 parsedResult = parseOutFromLP_solve(normarmalizedArray, dim)
-printResult parsedResult
+printResult(parsedResult, dim)
 ##
 ##End of main function
 ##
