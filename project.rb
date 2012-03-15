@@ -13,10 +13,7 @@ def normalizeFile fileLines #parse array and remove spaces, EOL and etc,...
   normalizedLines = []
 
   fileLines.each do |oneLine|
-    oneLine.strip!
-    oneLine.gsub!(/\r\n/,'\n')
-    oneLine.gsub!(/\r/,'\n')
-    oneLine.gsub!(/\s*,\s*/, ' ')
+    oneLine = oneLine.gsub(/[^ULDR0-9<>\s]+/i, '')
     oneLine.split(' ')
     normalizedLines.push oneLine
   end
@@ -28,6 +25,22 @@ def normalizeFile fileLines #parse array and remove spaces, EOL and etc,...
 
   return finalData
 end
+
+def normalizeFinalFile fileLines #parse array and remove spaces, EOL and etc,...
+	normalizedLines = []
+
+	fileLines.each do |oneLine|
+		normalizedLines.push oneLine
+	end
+	finalData = []
+
+	normalizedLines.each do |this_line|
+		finalData << this_line.split(' ')
+	end
+
+	return finalData
+end
+
 ##
 ##function to testing input for many thinks
 ##
@@ -58,6 +71,9 @@ def testInput inputArray
   (lineOfNumberConstraints+1..(numberOfAdditionalConstraints.to_i+lineOfNumberConstraints)).each do |i|
     testNumberOfElements(inputArray,i,4)
   end
+
+  testValueOfElements(inputArray,dim, nOfSetNumbers,numberOfAdditionalConstraints)
+
   return dim
 end
 ##
@@ -87,6 +103,11 @@ def testNumberOfElements(inputArray, position, nElements)
     puts "Input file wrong - some constraint is not OK, Line N.#{position+1}"
     Kernel.exit
   end
+end
+
+def testValueOfElements(inputArray, mAX_VAL, nSet,nCon)
+	inputArray = inputArray.to_s.gsub(/[^0-9]/,'')
+	#puts inputArray.to_s
 end
 ##
 ##function printing file for Lp_solve
@@ -182,7 +203,7 @@ for j in 1..dim
     outStringArr[postInArr] = "#{outString} = #{sum};"    
     postInArr = postInArr+1
     outString = ""
-  end
+end
 
   return outStringArr
 end
@@ -259,13 +280,13 @@ for i in (1..dim)
           outStringArr[num] = outString
           num = num + 1
     }
-  end
+end
 
   return outStringArr
 end
 
 def createDefinedNumbers(inputArray, varMatrix) #return constraints for predefined numbers
-  dim = inputArray[0][0].to_i
+  #dim = inputArray[0][0].to_i
     nOfSetNumbers = inputArray[1][0].to_i
     outStringArr = []
 
@@ -273,6 +294,7 @@ def createDefinedNumbers(inputArray, varMatrix) #return constraints for predefin
       colNum = inputArray[i][1].to_i
       rowNum = inputArray[i][0].to_i
       intVal = inputArray[i][2].to_i
+      #puts "col:#{colNum} row:#{rowNum} inVal#{intVal}"
       x = varMatrix[rowNum-1][colNum-1]
       outStringArr[i-2] = "#{x} = #{intVal};"
     end
@@ -292,8 +314,8 @@ def createAdditionalConstraints(inputArray, varMatrix) #return constraint betwee
   outP = 0
   (startP..endP).each do |i|
     relatedPosition = inputArray[i][3]
-    y = inputArray[i][0].to_i-1
-    x = inputArray[i][1].to_i-1
+    x = inputArray[i][0].to_i-1
+    y = inputArray[i][1].to_i-1
     testPositionOfCompared(x, y, relatedPosition, dim, i)
     (xC, yC) = setVarToCompare(x, y, relatedPosition)
     if inputArray[i][2] == "<"
@@ -347,7 +369,6 @@ def setEachVarConstraint(inputArray, varMatrix) #setting constraint for each var
   dim = inputArray[0][0].to_i
   num = 1
   outStringArr = []
-  outString = String.new
 
   for i in 1..dim
     for j in 1..dim
@@ -473,7 +494,7 @@ dim = testInput normarmalizedArray
 printToLpFile normarmalizedArray
 system("lp_solve outputForLpSolve.lp>outFromLpSolve.txt")
 arrayOfLines = readFile 'outFromLpSolve.txt'
-normarmalizedArray = normalizeFile arrayOfLines
+normarmalizedArray = normalizeFinalFile arrayOfLines
 parsedResult = parseOutFromLP_solve(normarmalizedArray, dim)
 printResult parsedResult
 ##
