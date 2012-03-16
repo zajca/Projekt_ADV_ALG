@@ -2,8 +2,22 @@
 
 def readFile fileName #reads file and return array of file
   puts fileName.to_s
+  
+  if fileName.nil?
+    puts "Insert file"
+    puts ""
+    puts "usage:"
+    puts "bash project.sh <file>"
+    puts "or"
+    puts "ruby project.rb <file>"
+    Kernel.exit
+  end
+
   if FileTest::exist?(fileName)
      fileLines = IO.readlines(fileName)
+  else
+    puts "File is not exist"
+    Kernel.exit
   end
 
   fileLines
