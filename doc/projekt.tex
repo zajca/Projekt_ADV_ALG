@@ -311,14 +311,14 @@ Project is programmed in ruby programing language: \href{http://www.ruby-lang.or
 \newline
 Description step-by-step:
 \begin{description}
- \item[Program <file>] Run program with file input
+ \item[Program <file.in> <file.out>] Run program with file input
  \item[...parse input]
  \item[make file: outputForLpSolve.lp]
  \item[lp\_solve outputForLpSolve.lp]
  \item[...solving problem]
  \item[make file: outFromLpSolve.txt]
  \item[...parse file]
- \item[print result] also create file: FinalResult.txt
+ \item[print result] also create output file
  \end{description}
 
 \subsection{Instalation of needed programs}
@@ -366,25 +366,13 @@ $ git clone git://github.com/zajca/Projekt_ADV_ALG.git
 \end{Verbatim}
     \end{codeframe}
 
-There are to ways how to run program:\newline
-
 \begin{itemize}
-\item with simple bash script (only difference is that bash script also runs time program to measure time)
+\item Run program:
 \end{itemize}
 
 \begin{codeframe}
       \begin{Verbatim}{frame=single}
-$ bash project.sh <input file> 
-\end{Verbatim}
-    \end{codeframe}
-
-\begin{itemize}
-\item with ruby interpreter
-\end{itemize}
-
-\begin{codeframe}
-      \begin{Verbatim}{frame=single}
-$ ruby project.rb <input file> 
+$ ruby project.rb <input file> <output file> 
 \end{Verbatim}
     \end{codeframe}
 \end{document}
