@@ -321,6 +321,11 @@ Description step-by-step:
  \item[print result] also create output file
  \end{description}
 
+ \subsection{Results and problems}
+ Entering the project was successfully processed. But there are some performance complication: primarily to describe the rules for individual matrix elements, it should be a large number of variables, which slows the calculation.
+\newline
+For example: to solve matrix 4x4 is needed 96 aditional variables and 240 additional constraints. To solve matrix 8x8 is needed 896 additional variables and 2240 additional constraints. This is big performace problem because lp solve is not multicore aplication and calculation takes lots of time.
+
 \subsection{Instalation of needed programs}
 To run our program is needed ruby prgraming language and ILP solver LP\_solve\newline
 \newline
@@ -340,7 +345,8 @@ Lp\_solve instalation:
 # apt-get instal lp-solve
 \end{Verbatim}
     \end{codeframe}
-\newpage
+
+
 \b{Archlinux:} \newline
 Ruby Instalation:
 
