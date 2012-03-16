@@ -1,15 +1,12 @@
 #!/usr/bin/ruby
 
 def readFile fileName #reads file and return array of file
-  puts fileName.to_s
-  
   if fileName.nil?
     puts "Insert file"
-    puts ""
     puts "usage:"
-    puts "bash project.sh <file>"
+    puts "bash project.sh <file input> <file output>"
     puts "or"
-    puts "ruby project.rb <file>"
+    puts "ruby project.rb <file input> <file output>"
     Kernel.exit
   end
 
@@ -21,6 +18,18 @@ def readFile fileName #reads file and return array of file
   end
 
   fileLines
+end
+
+def testOutFile fileName #test output file parameter
+  if fileName.nil?
+    puts "Insert output file"
+    puts "usage:"
+    puts "bash project.sh <file input> <file output>"
+    puts "or"
+    puts "ruby project.rb <file input> <file output>"
+    Kernel.exit
+  end
+  return fileName
 end
 
 def normalizeFile fileLines #parse array and remove spaces, EOL and etc,...
@@ -516,8 +525,7 @@ def parseOutFromLP_solve(inputArray, dim)
   return outStringArr
 end
 
-def printResult(resultArr, dim)
-  outputFileName = 'FinalResult.txt'
+def printResult(resultArr, dim, outputFileName)
   outFile = File.new(outputFileName, 'w')
   
   arrL = resultArr.length
@@ -537,6 +545,7 @@ end
 ##
 system("clear")
 arrayOfLines = readFile ARGV[0]
+outputFile = testOutFile ARGV[1]
 normarmalizedArray = normalizeFile arrayOfLines
 dim = testInput normarmalizedArray
 printToLpFile normarmalizedArray
@@ -544,7 +553,7 @@ system("lp_solve outputForLpSolve.lp>outFromLpSolve.txt")
 arrayOfLines = readFile 'outFromLpSolve.txt'
 normarmalizedArray = normalizeFinalFile arrayOfLines
 parsedResult = parseOutFromLP_solve(normarmalizedArray, dim)
-printResult(parsedResult, dim)
+printResult(parsedResult, dim, outputFile)
 ##
 ##End of main function
 ##
