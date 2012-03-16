@@ -1,0 +1,390 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{xltxtra}
+\usepackage[czech]{babel}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage[svgnames]{xcolor}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{fancybox,calc}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{tocloft}
+\usepackage{textcase}
+\usepackage{ifthen}
+\usepackage{setspace}
+\usepackage{ccaption}
+\usepackage{sectsty}
+\usepackage{wrapfig}
+%\usepackage[srcstyle=leftnumhang,linenumbersep={\ }]{examplep}
+% ************************ NASTAVENÍ AUTORA A NÁZVU DOKUMENTU ************************
+\newcommand{\rok}{2012}
+\newcommand{\jmeno}{Martin Zajíc}
+\newcommand{\typprace}{Project}
+\newcommand{\predmet}{Advanced Algorithms}
+\newcommand{\predmeten}{Fisrt project}
+% ************************ NASTAVENÍ TISKOVÉHO ZRCADLA ************************
+\textheight=248mm
+\textwidth=155mm
+\voffset=-1.61cm
+\oddsidemargin=0.96cm
+\evensidemargin=0.96cm
+
+% nastavení záhlaví
+\headheight=0.5cm
+\headsep=1cm
+
+% nastavení zápatí
+\footskip=1ex
+\rhead{\thepage}
+\cfoot{}
+% "vypnout" poznámky na okrajích
+\marginparpush=0mm
+\marginparwidth=0mm
+\marginparsep=0mm
+
+\pagestyle{fancy}
+% ****************** NASTAVENÍ HYPERPREF (BAREV ODKAZŮ, PDF DOKUMENTU) **************
+\hypersetup{
+    pdftoolbar=true, % show Acrobat’s toolbar?
+    pdfmenubar=true, % show Acrobat’s menu?
+    pdftitle={\typprace~-~\predmet }, % title
+    pdfauthor={\jmeno}, % author
+    pdfsubject={\predmet}, % subject of the document
+    pdfcreator={\jmeno}, % creator of the document
+    colorlinks=true, % false: boxed links; true: colored links
+    linkcolor=black, % color of internal links
+    citecolor=black, % color of links to bibliography
+    filecolor=black, % color of file links
+    urlcolor=black % color of external links
+}
+
+% ****************** NASTAVENÍ PÍSMA, ODSTAVCE, ROVNIC, POZNÁMEK **************
+\parindent=0em
+\def\thefootnote{\arabic{footnote})} % poznámka pod čarou se závorkou
+\onehalfspacing % nastavím řádkování tímto způsobem nebo \renewcommand{\baselinestretch}{1.5} ??
+\setlength{\parskip}{3pt} % vertikální mezera mezi nadpisy
+% *************************** NASTAVENÍ ČÍTAČŮ ********************************
+\setcounter{tocdepth}{3} % do obsahu se ukládají pouze první dvě úrovně kapitol
+
+% *************************** UŽIVATELSKÉ STYLY *******************************
+\newcommand{\nn}[1]{\clearpage\section*{\texorpdfstring{\uppercase{#1}}{#1}}\addcontentsline{toc}{section}{\uppercase{#1}}}% styl nn = nečíslovaný nadpis (je vysázený v obsahu)
+\newcommand{\nm}[1]{\clearpage\section*{\uppercase{#1}}} % definujeme styl nm = nečíslovaný nadpis (není vysázený v obsahu)
+\newcommand{\nmm}[1]{\section*{#1}} % definujeme styl nmm = nečíslovaný nadpis (není vysázený v obsahu) malými písmeny bez clearpage
+\newcommand{\nns}[1]{\section*{\uppercase{#1}}} % definujeme styl ns = nečíslovaný nadpis na stejné stránce (není vysázený v obsahu)
+\newcommand{\sectionV}[1]{\section{\uppercase{#1}}} %nadpis1 (section) velkým
+%\renewcommand{\section}[1]{\section{\uppercase{#1}}}
+\newcommand{\upc}[1]{\uppercase{#1}} %zjednodušení pro velká písmena
+\newcommand{\odkazNaKapitolu}[1]{(viz.~kapitola~\ref{#1}/s\pageref{#1})}
+\newcommand{\odkazNaObrazek}[1]{(viz.~obr.~\ref{#1}/s\pageref{#1})}
+
+\newcommand{\nadpis}[1]{%nadpis pod kterym je vertikalni mezera
+\vspace{4 mm}
+\textbf{#1}\\
+\vspace{4 mm}
+}
+
+\newcommand{\obr}[3]{% styl \obr pro obrázky
+\begin{figure}[h]
+\center\includegraphics[scale=#2]{#1}
+\caption{#3}
+\end{figure}
+}
+
+\newcommand{\ofZadani}[2]{% styl \obr pro obrázky
+\begin{figure}[h]
+\center\includegraphics[width=500pt,height=700pt]{#1}
+%\caption{#2}
+\end{figure}
+}
+
+\newcommand{\tab}[3]{% styl \tab pro tabulky
+\begin{table}[h]
+\caption{#1}
+\begin{center}
+\begin{tabular}{#2}
+#3
+\end{tabular}
+\end{center}
+\end{table}
+}
+
+\newcommand{\tabpri}[3]{% styl \tabpri pro tabulky v příloze
+\begin{table}[h]
+\begin{center}
+#1
+\end{center}
+\begin{center}
+\begin{tabular}{#2}
+#3
+\end{tabular}
+\end{center}
+\end{table}
+}
+
+\newcommand{\rov}[2][chybějici rovnice]{% styl \rov pro rovnice
+\begin{equation}
+#2
+\label{#1}
+\end{equation}
+}
+
+\newcommand{\seznamobr}{% příkaz \seznamobr pro vysázení seznamu obrázků
+\addcontentsline{toc}{section}{\listfigurename}
+\clearpage
+\listoffigures
+\clearpage
+}
+
+\newcommand{\seznamtab}{% příkaz \seznamtab pro vysázení seznamu obrázků
+\addcontentsline{toc}{section}{\listtablename}
+\clearpage
+\listoftables
+\clearpage
+}
+
+\newcommand{\seznamlit}[1]{% příkaz \seznamlit pro vysázení seznamu literatury
+\addcontentsline{toc}{section}{\refname}
+\begin{thebibliography}{10}
+#1
+\end{thebibliography}}
+
+\newcommand{\seznamzkr}{% příkaz \seznamzkr pro přípravu seznamu použitých zkratek a symbolů
+\nn{Seznam použitých symbolů a zkratek}
+}
+
+\newcommand{\obsah}{% \obsah vysází obsah v daném místě
+\clearpage
+\thispagestyle{empty}
+\tableofcontents
+\clearpage
+\pagestyle{fancy}
+}
+
+\renewcommand{\b}[1]{\textbf{#1}} % \b = tučně
+\newcommand{\bi}[1]{\textbf{\textit{#1}}} % \bi = tučná kurzíva
+\renewcommand{\it}[1]{\textit{#1}} % \it = kurzíva
+
+% ******* NASTAVENÍ ZOBRAZENÍ PŘÍLOH -- SEZNAM, ČÍSLOVÁNÍ, VLASTNÍ STYL *******
+\makeatletter % tímto příkazem dávám najevo, že budu editovat přímo příkazy ze šablony
+
+% definice seznamu příloh - příkaz \listofappendices
+\newcommand{\listofappendices}{%
+\newpage
+\setcounter{section}{0}
+\nn{Seznam příloh}
+\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn\fi
+\@mkboth{LIST OF APPENDICES}{LIST OF APPENDICES}
+\@starttoc{loa}\if@restonecol\twocolumn\fi
+\pagestyle{empty}
+\thispagestyle{fancy}
+}
+
+\def\ext@appendix{loa}
+\def\tocname{loa}
+
+% definice příkazu \priloha{nazev prilohy} pro vložení nové přílohy
+\newcommand{\priloha}[1]{
+\clearpage
+\refstepcounter{section}
+\addtocontents{loa}{\protect\makebox[1.5cm][l]{P \@Roman\c@section.} #1\newline}
+{\bf PŘÍLOHA P \@Roman\c@section. \uppercase{#1}}\par\vspace{0.5cm}}
+
+% v obsahu nastavím VELKÉ PÍSMENA pro styl část
+\renewcommand{\part}[1]{
+\refstepcounter{part}
+\addcontentsline{toc}{section}{\thepart~~\uppercase{#1}}%
+\clearpage
+\normalfont
+\vspace*{9cm}
+\begin{center}\huge \bfseries\thepart. \uppercase{#1}\end{center}%
+\markboth{}{}\par
+\nobreak
+\clearpage
+}
+% *******************Barevný code *******************
+\definecolor{codeback}{gray}{0.8} %barva pozadi
+
+\newenvironment{codeframe}{%
+  \begin{Sbox}
+    \begin{minipage}
+      {\columnwidth-\leftmargin-\rightmargin-2\fboxsep-2\fboxrule-4pt}
+}{%
+
+  \end{minipage}
+  \end{Sbox}
+  \begin{center}
+    \fcolorbox{black}{codeback}{\TheSbox}
+  \end{center}
+}
+
+% *************** NASTAVENÍ FORMÁTU ČÍSLOVÁNÍ OBRÁZKŮ A TABULEK ***************
+\def\thefigure{\arabic{figure}} % číslování obrázků typu (y)
+\def\thetable{\arabic{table}} % číslování tabulek typu (y)
+\captiondelim{. } % změníme dvoutečku za Obr/Tab za tečku
+
+% ***************************** VYNULOVÁNÍ ČÍTAČŮ *****************************
+\@addtoreset{table}{section} % vynulování čítače
+%\@addtoreset{figure}{section} % vynulování čítače
+\@addtoreset{footnote}{section} % vynulování čítače
+
+\makeatother % a to je ukončení \makeatletter
+
+% ************* ÚPRAVA VZHLEDU OBSAHU, SEZNAMU OBRÁZKÙ A TABULEK **************
+% nastavení vertikální mezery před stylem část, nadpis 1--3
+\setlength{\cftbeforepartskip}{3pt}
+\setlength{\cftbeforesecskip}{3pt}
+\setlength{\cftbeforesubsecskip}{3pt}
+\setlength{\cftbeforesubsubsecskip}{0cm}
+% odsazení zleva pro styl část, nadpis 1--3
+\setlength{\cftpartindent}{0cm}
+\setlength{\cftsecindent}{0cm}
+\setlength{\cftsubsecindent}{0cm}
+\setlength{\cftsubsubsecindent}{0cm}
+% nastavení fontu pro styl část, nadpis 1--3
+\renewcommand{\cftpartfont}{\small\bfseries}
+\renewcommand{\cftsecfont}{\small\bfseries}
+\renewcommand{\cftsubsecfont}{\scshape}
+\renewcommand{\cftsubsubsecfont}{}
+% odsazení čísla a textu titulku pro styl část, nadpis 1--3
+\cftsetindents{part}{0cm}{1cm}
+\cftsetindents{sec}{0cm}{1cm}
+\cftsetindents{subsec}{1cm}{1.5cm}
+\cftsetindents{subsubsec}{1.2cm}{1.7cm}
+\cftsetindents{fig}{0cm}{1.5cm}
+\cftsetindents{tab}{0cm}{1.5cm}
+% nastavení vodící čáry pro styl část, nadpis 1--3, obrázky a tabulky
+\renewcommand{\cftdot}{\ensuremath{.}} % tímto příkazem lze změnit vodící tečky v obsahu na jiný znak
+\renewcommand{\cftpartleader}{\cftdotfill{0.3}}
+\renewcommand{\cftsecleader}{\cftdotfill{0.3}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{0.3}}
+\renewcommand{\cftsubsubsecleader}{\cftdotfill{0.3}}
+\renewcommand{\cftfigleader}{\cftdotfill{0.3}}
+\renewcommand{\cfttableader}{\cftdotfill{0.3}}
+% změna fontu pro text "Obsah", "Seznam obrázků" a "Seznam tabulek"
+\renewcommand{\cfttoctitlefont}{\normalsize\bfseries\thispagestyle{empty}}
+\renewcommand{\cftloftitlefont}{\normalsize\bfseries\thispagestyle{fancy}}
+\renewcommand{\cftlottitlefont}{\normalsize\bfseries\thispagestyle{fancy}}
+\renewcommand{\cftfigpresnum}{Obr. }
+\renewcommand{\cftfigaftersnum}{.}
+\renewcommand{\cfttabpresnum}{Tab. }
+\renewcommand{\cfttabaftersnum}{.}
+
+% ************************ NASTAVENÍ FONTU PRO NADPISY ************************
+\sectionfont{\normalsize}
+\subsectionfont{\normalsize\bfseries}
+\subsubsectionfont{\normalsize\bfseries}
+\paragraphfont{\small\bf}
+% definice nového stylu \comment -- komentář k šabloně
+%\newcommand{\comment}[1]{\color{red}#1\color{black}}
+
+% ****************************** KONEC PREAMBULE ******************************
+
+\begin{document}
+\lhead{\textbf{IST - UTL}}
+\begin{titlepage}
+\begin{center}
+Documentation for First Project\newline
+\newline
+Universidade Técnica de Lisboa\newline
+Instituto Superior Técnico\newline
+\newline
+Subject: Advanced Algorithms\newline
+Author: Martin Zajíc zajca@zajca.cz\newline
+\newline
+\end{center}
+\end{titlepage}
+\section{Information about program}
+For this project I decided to use method whem my program parsing data input file, then create new output file for external solver. External solver then solves problem and saves it in another file that the program reads and prints the result to file and to systemout.
+\newline
+\newline
+As solver program was chosen Lp solve: \href{http://sourceforge.net/projects/lpsolve/}{http://sourceforge.net/projects/lpsolve/}
+\newline
+\newline
+Project is programmed in ruby programing language: \href{http://www.ruby-lang.org/en/}{http://www.ruby-lang.org/en/}
+\newline
+\newline
+Description step-by-step:
+\begin{description}
+ \item[Program <file>] Run program with file input
+ \item[...parse input]
+ \item[make file: outputForLpSolve.lp]
+ \item[lp\_solve outputForLpSolve.lp]
+ \item[...solving problem]
+ \item[make file: outFromLpSolve.txt]
+ \item[...parse file]
+ \item[print result] also create file: FinalResult.txt
+ \end{description}
+
+\subsection{Instalation of needed programs}
+To run our program is needed ruby prgraming language and ILP solver LP\_solve\newline
+\newline
+\b{Ubuntu GNU/Linux:} \newline
+Ruby Instalation:
+
+ \begin{codeframe}
+      \begin{Verbatim}{frame=single}
+# apt-get instal ruby
+\end{Verbatim}
+    \end{codeframe}
+
+Lp\_solve instalation:
+
+\begin{codeframe}
+      \begin{Verbatim}{frame=single}
+# apt-get instal lp-solve
+\end{Verbatim}
+    \end{codeframe}
+\newpage
+\b{Archlinux:} \newline
+Ruby Instalation:
+
+ \begin{codeframe}
+      \begin{Verbatim}{frame=single}
+# pacman -S ruby
+\end{Verbatim}
+    \end{codeframe}
+
+Lp\_solve instalation:
+
+\begin{codeframe}
+      \begin{Verbatim}{frame=single}
+# pacman -S lp_solve
+\end{Verbatim}
+    \end{codeframe}
+
+\subsection{Run program}
+Unpack program to directory from zip archive or download it with GIT\newline
+\begin{codeframe}
+      \begin{Verbatim}{frame=single}
+$ git clone git://github.com/zajca/Projekt_ADV_ALG.git
+\end{Verbatim}
+    \end{codeframe}
+
+There are to ways how to run program:\newline
+
+\begin{itemize}
+\item with simple bash script (only difference is that bash script also runs time program to measure time)
+\end{itemize}
+
+\begin{codeframe}
+      \begin{Verbatim}{frame=single}
+$ bash project.sh <input file> 
+\end{Verbatim}
+    \end{codeframe}
+
+\begin{itemize}
+\item with ruby interpreter
+\end{itemize}
+
+\begin{codeframe}
+      \begin{Verbatim}{frame=single}
+$ ruby project.rb <input file> 
+\end{Verbatim}
+    \end{codeframe}
+\end{document}
