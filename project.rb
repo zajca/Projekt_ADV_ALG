@@ -438,16 +438,23 @@ def setIntegers (varMatrix, boolMatrixRow, boolMatrixCol) #return set of integer
   outString = "int "
 
   varMatrix.each do |i|
-    outString += "#{i.to_s.gsub(/[\[\]\"]/, '')}, "
+    i.each do |j|
+      outString += "#{j}, "
+    end
   end  
 
   boolMatrixCol.each do |i|
-    outString += "#{i.to_s.gsub(/[\[\]\"]/, '')}, "
-  end
+    i.each do |j|
+      outString += "#{j}, "
+    end
+  end  
 
   boolMatrixRow.each do |i|
-    outString += "#{i.to_s.gsub(/[\[\]\"]/, '')}, "
-  end
+    i.each do |j|
+      outString += "#{j}, "
+    end
+  end  
+  
   outString = outString[0..-3]
   outString += ";"
   return outString
